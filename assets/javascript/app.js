@@ -1,12 +1,14 @@
-// var timer = 10;
+// global variables
 var intervalId;
 var questCounter = 0;
 var answeredCorrect = 0;
 var answeredWrong = 0;
 var unAnswered = 0;
 var currentQuestion;
+var audioElement = document.createElement("audio");
 
 
+//question objects
 var allQuestions = [
 	{
 		questionText: "Who has the most wins as a head coach in the NFL?",
@@ -37,19 +39,19 @@ var allQuestions = [
 	},
 	{
 		questionText: "How many Heisman Trophy winners have gone on to be MVP of the Super Bowl?",
-		answer1: "4",
-		answer2: "5",
-		answer3: "6",
-		answer4: "7",
+		answer1: "2",
+		answer2: "3",
+		answer3: "4",
+		answer4: "5",
 		correctAnswer: "4",
 		correctInfo: "Correct! Desmond Howard, Jim Plunkett, Marcus Allen, and Roger Staubach have achieved both honors."
 	},
 	{
 		questionText: "Which player was the first to say \"I'm going to Disney World!\" after winning the Super Bowl?",
-		answer1: "Phil Simms",
+		answer1: "Boomer Esiason",
 		answer2: "Dan Marino",
 		answer3: "Joe Montana",
-		answer4: "Boomer Esiason",
+		answer4: "Phil Simms",
 		correctAnswer: "Phil Simms",
 		correctInfo: "Correct! Simms was the first to say the phrase following the Giants win over the Broncos in SuperBowl XXI in 1987."
 	},
@@ -69,7 +71,7 @@ var allQuestions = [
 		answer3: "Jerry Rice",
 		answer4: "Flipper Anderson",
 		correctAnswer: "Flipper Anderson",
-		correctInfo: "Correct! Anderson want on to finish the '89 season with 1184 receiving yards."
+		correctInfo: "Correct! Anderson went on to finish the '89 season with 1184 receiving yards."
 
 	},
 	{
@@ -79,7 +81,7 @@ var allQuestions = [
 		answer3: "Warren Moon",
 		answer4: "Fred Biletnikoff",
 		correctAnswer: "Warren Moon",
-		correctInfo: "Correct! Moon entered the NFL & CFL Halls of Fame in 2006 and 2001, respecitvely. "
+		correctInfo: "Correct! Moon entered the NFL and CFL Halls of Fame in 2006 and 2001, respecitvely. "
 
 	},
 	{
@@ -92,7 +94,7 @@ var allQuestions = [
 		correctInfo: "Correct! The Titans kicker connected on FGs of 52, 25, 21, 30, 28, 43, 29, 29 yards against the Texans in 2007."
 	},
 	{
-		questionText: "The oldest, current NFl franchises are:",
+		questionText: "The oldest, current NFL franchises are:",
 		answer1: "Green Bay Packers and New York Giants",
 		answer2: "Washington Redskins and Philadelphia Eagles",
 		answer3: "Chicago Bears and Arizona Cardinals",
@@ -103,20 +105,15 @@ var allQuestions = [
 ];		
 
 var questionsLength = allQuestions.length;
-console.log(questionsLength);
-// var clock = {
-
-// }
 
 
+// Function called when an answered is guessed correctly.  Hides buttons, displays further info on the correct guess, increments the appropriate counters, and checks to see if max number off questions has been reached.  If questCounter == questionsLength, then the game if over and endScreen() is called.  If not, then a new questions is displayed.
 function correctAnswer(){
 	$('.button').off("click");
 	$('.answer-buttons').hide();
 	$('.question').text(allQuestions[questCounter].correctInfo);
 	questCounter++;
 	answeredCorrect++;
-	// return timer = 10;
-//change back to 9
 	clearInterval(intervalId);
 	if ( questCounter == questionsLength){  
 		setTimeout(endScreen, 1000 * 4);
@@ -125,15 +122,14 @@ function correctAnswer(){
 	}
 }
 
+// Function that is called on a wrong answer.  Hides buttons, displays "Wrong Answer!", increments the appropriate counters, and checks to see if max number off questions has been reached.  If questCounter == questionsLength, then the game if over and endScreen() is called.  If not, then a new questions is displayed.
 function wrongAnswer(){
 	$('.button').off("click");
 	$('.answer-buttons').hide();
-	$('.question').text("Wrong Answer!");
-	// return timer = 10;
+	$('.question').text("Wrong Answer!").css({"color" : "red", "font-size" : "5em"});
 	questCounter++;
 	answeredWrong++
 	clearInterval(intervalId);
-//change back to 9
 	if ( questCounter == questionsLength){
 		setTimeout(endScreen, 1000 * 2);
 	} else {
@@ -142,9 +138,10 @@ function wrongAnswer(){
 	
 }
 
+// Function that is called when the 11second timer runs out.  Hides buttons, displays "Time's Up!", increments the appropriate counters, and checks to see if max number off questions has been reached.  If questCounter == questionsLength, then the game if over and endScreen() is called.  If not, then a new questions is displayed.
 function noTime(){
 	$('.button').off("click");
-	$('.question').text("Time's Up!");
+	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
 	$('.answer-buttons').hide();
 	questCounter++;
 	unAnswered++
@@ -156,30 +153,28 @@ function noTime(){
 	}
 }
 
-// var answeredCorrect = 0;
-// var answeredWrong = 0;
-// var unAnswered = 0;
 
+//Function that is called when all questions have been answered.  Plays the Monday Night Football theme and displays the users stats.  If they click the 'Play again' button, stats are reset, the music stops, and the first questions is displayed 
 function endScreen(){
-	// $('.button').off("click");
-
+	audioElement.setAttribute("src", "assets/audio/theme.mp3");
+    audioElement.play();
 	$('.answer-buttons').show();
-	$('.question').text("That's the end of the game!  Here's how you did:");
+	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
 	$('.answer-1').text("Correct answers: " + answeredCorrect );
 	$('.answer-2').text("Wrong answers: " + answeredWrong );
-	$('.answer-3').text("Unanswered " + unAnswered );
+	$('.answer-3').text("Unanswered: " + unAnswered );
 	$('.answer-4').text(" Click Here To Play Again");
 	$('.answer-4').on("click", function(){
+		audioElement.pause();
 		gameReset();
 		displayQuestion();
  	});
 
 }
 
-function gameReset() {
-	// $('answer-4').off("click");
-	// return timer = 10;
 
+//function called if the user clicks "play again" on the end screen.  Resets all pertinent variable to 0
+function gameReset() {
 	 questCounter = 0;
 	 answeredCorrect = 0;
 	 answeredWrong = 0;
@@ -189,61 +184,35 @@ function gameReset() {
 	 return answeredCorrect;
 	 return answeredWrong;
 	 return unAnswered;
-
-	// displayQuestion();
 }
 
-// function run() {
-//       intervalId = setInterval(decrement, 1000);
-//     }
 
-//     //  The decrement function.
-//     function decrement() {
-
-//       //  Decrease number by one.
-//       number--;
-
-//       //  Show the number in the #show-number tag.
-//       $(".timer").html("<h2>" + number + "</h2>");
-
-
-//       //  Once number hits zero...
-//       if (number === 0) {
-
-//       noTime();
-//       }
-//     }
-
-
+//function that displays the timer and the current question (based on questCounter)
 function displayQuestion() {
-	// clearInterval(intervalId);
+	
 	var timer = 11;
-
+	//decrease timer and display it on screen in the timer div
 	intervalId = setInterval(decrement, 1000);
 	function decrement() {
-
-      //  Decrease number by one.
       timer--;
-
-      //  Show the timer in the #show-timer tag.
-      $(".timer").html("<h2>" + timer + "</h2>");
-
-
-      //  Once timer hits zero...
+      $(".timer").html(timer);
+      // if the timer reaches 0, call noTime()
       if (timer === 0) {
-
-      noTime();
+      	noTime();
       }
-  }
-    
-
-	$('.button').off("click");
-	$('.question').text(allQuestions[questCounter].questionText);
+  	}
+   	
+   	//added this as it seemed like the previous click was getting carried over
+	$('.button').off("click"); 
+	//display and style the current question
+	$('.question').text(allQuestions[questCounter].questionText).css({"color" : "white", "font-size" : "3em", "border" : ""});
+	//show all the buttons and their answers
 	$('.answer-buttons').show();
 	$('.answer-1').text(allQuestions[questCounter].answer1);
 	$('.answer-2').text(allQuestions[questCounter].answer2);
 	$('.answer-3').text(allQuestions[questCounter].answer3);
 	$('.answer-4').text(allQuestions[questCounter].answer4);
+	//display correctAnswer() or wrongAnswer() depending on if the text for the button clicked matches the value of the correctAnswer
 	$('.button').on("click", function(){
 	 	if ($(this).text() == allQuestions[questCounter].correctAnswer){
 	 		correctAnswer();
@@ -251,19 +220,10 @@ function displayQuestion() {
 	 		wrongAnswer();
 	 	}
  	});
-
-
 }
 
-
-
+//display the start screen and display a questions once the button is clicked
 $(document).ready(function() {
-	// $('.answer-buttons').hide();
-	// $('.question').text("Click Here To Start!");
-	// $('.question').on("click", function(){
-	// 	displayQuestion();
-	// });
-
 	$('.answer-1').text("Click Here To Start!");
 	$('.answer-2').hide();
 	$('.answer-3').hide();
