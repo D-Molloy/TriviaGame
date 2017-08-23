@@ -1,5 +1,5 @@
-# TriviaGame
-Assignment #5 - Trivia Game -
+Trivia Game
 
-Create a trivia game using HTML, CSS, Javascript, and jQuery.
+Assignment #5 - due 7/24/17 - (Advanced homework option: RPG game) - HTML/CSS/JS/JQuery
 
+Objective: Create a trivia game using JavaScript logic and jQuery to manipulate HTML.  New knowledge implemented includes objects, and timer methods (setInterval, clearInterval, setTimeout).
